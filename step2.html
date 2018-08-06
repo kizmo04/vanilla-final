@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Step2</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container">
+    <nav>
+      <ul class="pagination">
+        <li class="page-item disabled"><a class="page-link">1</a></li>
+        <li class="page-item active"><a class="page-link">2</a></li>
+        <li class="page-item disabled"><a class="page-link">3</a></li>
+        <li class="page-item disabled"><a class="page-link">4</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container">
+    <form>
+      <div class="form-group">
+        <label form="email">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label form="password">Password</label>
+        <input type="password" class="form-control is-invalid" id="password" placeholder="Password">
+        <div class="invalid-feedback">
+          Password must have a length 6 or above.
+        </div>
+      </div>
+      <div class="form-group">
+        <label form="confirm">Password confirm</label>
+        <input type="password" class="form-control" id="confirm" placeholder="Password again">
+      </div>
+      <button type="submit" class="btn btn-primary disabled">Signup</button>
+    </form>
+  </div>
+</body>
+
+</html>
