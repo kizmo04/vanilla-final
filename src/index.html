@@ -1,0 +1,168 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Vanilla Coding - final</title>
+  </head>
+  <body>
+    <!-- 수정하지 마세요! -->
+    <div id="root">
+      <div class="container">
+        <nav>
+          <ul class="pagination">
+            <li class="page-item active"><a class="page-link">1</a></li>
+            <li class="page-item disabled"><a class="page-link">2</a></li>
+            <li class="page-item disabled"><a class="page-link">3</a></li>
+            <li class="page-item disabled"><a class="page-link">4</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="step1">
+        <div class="container">
+          <h4>Terms</h4>
+          <form action="./step2.html" method="POST">
+            <div class="form-group">
+              <textarea>
+                Blah Blah Blah....
+                Blah Blah Blah....
+                Blah Blah Blah....
+                Blah Blah Blah....
+                Blah Blah Blah....
+                Blah Blah Blah....
+              </textarea>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="yes" id="agree">
+                <label class="form-check-label" for="agree">
+                  I agree with terms
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary disabled">Go next</button>
+          </form>
+        </div>
+      </div>
+      <div class="step2">
+        <!-- <div class="container">
+          <nav>
+            <ul class="pagination">
+              <li class="page-item disabled"><a class="page-link">1</a></li>
+              <li class="page-item active"><a class="page-link">2</a></li>
+              <li class="page-item disabled"><a class="page-link">3</a></li>
+              <li class="page-item disabled"><a class="page-link">4</a></li>
+            </ul>
+          </nav>
+        </div> -->
+        <div class="container">
+          <form>
+            <div class="form-group">
+              <label form="email">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter email">
+              <div class="invalid-feedback">
+                  Please enter your e-mail.
+              </div>
+            </div>
+            <div class="form-group">
+              <label form="password">Password</label>
+              <input type="password" class="form-control is-invalid" id="password" placeholder="Password">
+              <div class="invalid-feedback">
+                  Please enter your password.
+              </div>
+            </div>
+            <div class="form-group">
+              <label form="confirm">Password confirm</label>
+              <input type="password" class="form-control" id="confirm" placeholder="Password again">
+              <div class="invalid-feedback">
+                Password must have a length 6 or above.
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary disabled">Signup</button>
+          </form>
+        </div>
+      </div>
+      <div class="step3">
+        <!-- <div class="container">
+          <nav>
+            <ul class="pagination">
+              <li class="page-item disabled"><a class="page-link">1</a></li>
+              <li class="page-item disabled"><a class="page-link">2</a></li>
+              <li class="page-item active"><a class="page-link">3</a></li>
+              <li class="page-item disabled"><a class="page-link">4</a></li>
+            </ul>
+          </nav>
+        </div> -->
+        <div class="container">
+          <form>
+            <div class="form-group">
+              <label form="name">Full name</label>
+              <input type="text" class="form-control is-invalid" id="name" placeholder="Enter your full name">
+              <div class="invalid-feedback">
+                Please enter your full name.
+              </div>
+            </div>
+            <div class="form-group">
+              <label form="phone">Phone number</label>
+              <input type="tel" class="form-control is-invalid" id="phone" pattern="[0-9]{3}-[0-9]{3,4}-[0-9]{4}" placeholder="Enter your phone number">
+              <div class="invalid-feedback">
+                Please enter a valid phone number.
+              </div>
+            </div>
+            <div class="form-group">
+              <label form="address">Address</label>
+              <input type="text" class="form-control is-invalid" id="address" placeholder="Enter your address">
+              <div class="invalid-feedback">
+                Please enter your address.
+              </div>
+            </div>
+            <div class="form-group">
+              <label form="homepage">Homepage</label>
+              <input type="url" class="form-control is-invalid" id="homepage" pattern="https://.*" placeholder="Enter your homepage url">
+              <div class="invalid-feedback">
+                Please enter a valid homepage url.
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary disabled">Done</button>
+          </form>
+        </div>
+      </div>
+      <div class="step4">
+        <!-- <div class="container">
+          <nav>
+            <ul class="pagination">
+              <li class="page-item disabled"><a class="page-link">1</a></li>
+              <li class="page-item disabled"><a class="page-link">2</a></li>
+              <li class="page-item disabled"><a class="page-link">3</a></li>
+              <li class="page-item active"><a class="page-link">4</a></li>
+            </ul>
+          </nav>
+        </div> -->
+        <div class="container">
+          <div class="card">
+            <div class="card-header">
+              Singup finished
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Email</h5>
+              <p class="card-text"><%= email %></p>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Full name</h5>
+              <p class="card-text"><%= fullname %></p>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Phone number</h5>
+              <p class="card-text"><%= phone %></p>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Address</h5>
+              <p class="card-text"><%= address %></p>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Homepage</h5>
+              <p class="card-text"><a href="<%= address %>"><%= address %></a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
