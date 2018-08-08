@@ -210,7 +210,7 @@ hompage.addEventListener('input', function(e) {
   } else if (homepageUrlPattern.test(e.target.value)) {
     flagStep3.homepage = true;
     info.homepage = e.target.value;
-    if (e.target.className.includes('is-valid')) e.target.classList.remove('is-valid');
+    if (e.target.className.includes('is-invalid')) e.target.classList.remove('is-invalid');
     activateElement(submitStep3, flagStep3);
   } else {
     flagStep3.homepage = false;
