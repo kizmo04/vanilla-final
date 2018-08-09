@@ -1,11 +1,17 @@
 
 import domify from 'domify';
 import _ from 'lodash';
+import paginationTemplate from '../templates/pagination.html';
 import step1Template from '../templates/step1.html';
+import step2Template from '../templates/step2.html';
+import step3Template from '../templates/step3.html';
 import step4Template from '../templates/step4.html';
 
 
 let root = document.querySelector('#root');
+
+  step4.replaceChild(domify(_.template(step4Template)(info)), step4.children[0]);
+
 
 let step1 = root.querySelector('.step1');
 let step2 = root.querySelector('.step2');
@@ -17,6 +23,12 @@ let paginationNavigator = document.querySelector('.pagination');
 let pageList = [step1, step2, step3, step4];
 let info = {};
 // window.history.pushState({ name: 'step1' }, 'step1', '/steps/1');
+
+const Component = function() {
+  this.target = options.target;
+  this.template = options.template;
+  this.data = options.data;
+}
 
 
 
@@ -33,14 +45,6 @@ paginationNavigator.addEventListener('click', function(e) {
   } else {
     return;
   }
-
-  // let currentActiveButton = paginationNavigator.querySelector('.active');
-  // currentActiveButton.classList.remove('active');
-  // currentActiveButton.classList.add('disabled');
-
-  // target.parentElement.classList.remove('disabled');
-  // target.parentElement.classList.add('active');
-
   displayStepN(target.textContent);
 });
 
@@ -50,7 +54,7 @@ let submit = step1.querySelector('.btn-primary');
 let checkBox = step1.querySelector('.form-check-input');
 
 checkBox.addEventListener('click', function(e) {
-  if (checkBox.checked) activateElement(submit);
+  if (checkBox.checked) activateButton(submit);
 });
 
 submit.addEventListener('click', function(e) {
@@ -69,190 +73,128 @@ submit.addEventListener('click', function(e) {
 let email = step2.querySelector('#email');
 let password = step2.querySelector('#password');
 let confirm = step2.querySelector('#confirm');
-let errMsgList = step2.querySelectorAll('.invalid-feedback');
-let flag = {
-  email: false,
-  password: false,
-  confirm: false
-};
+let passwordOrigin;
+let submitStep2 = step2.querySelector('.btn-primary');
+let flag = {};
 
 if (email.value === '') {
   email.classList.add('is-invalid');
-  errMsgList[0].textContent = 'Please enter your e-mail.';
+  email.nextElementSibling.textContent = 'Please enter your e-mail.';
 }
 
-email.addEventListener('input', function(e) {
+
+
+email.addEventListener('input', getInputValidateEventHandler('email', submitStep2, function(value) {
   let emailPattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-  if (emailPattern.test(e.target.value)) {
-    if (email.className.includes('is-invalid')) email.classList.remove('is-invalid');
-    flag.email = true;
-    info.email = e.target.value;
-    activateElement(submitStep2, flag);
-  } else if (e.target.value === '') {
-    if (!email.className.includes('is-invalid')) email.classList.add('is-invalid');
-    errMsgList[0].textContent = 'Please enter your e-mail.';
-    flag.email = false;
-    deactivateElement(submitStep2);
-  } else {
-    if (!email.className.includes('is-invalid')) email.classList.add('is-invalid');
-    errMsgList[0].textContent = 'invalid e-mail format.';
-    falg.email = false;
-    deactivateElement(submitStep2);
-  }
-});
+  return emailPattern.test(value);
+}));
 
-let passwordOrigin;
-let submitStep2 = step2.querySelector('.btn-primary');
+password.addEventListener('input', getInputValidateEventHandler('password', submitStep2, function(value) {
+  return value.length >= 6;
+}));
 
-password.addEventListener('input', function(e) {
-  if (e.target.value === '') {
-    if (!password.className.includes('is-invalid')) password.classList.add('is-invalid');
-    errMsgList[1].textContent = 'Please enter your password.';
-    flag.password = false;
-    deactivateElement(submitStep2);
-  } else if (e.target.value.length < 6) {
-    if (!password.className.includes('is-invalid')) password.classList.add('is-invalid');
-    errMsgList[1].textContent = 'Password must have a length 6 or above.';
-    flag.password = false;
-    deactivateElement(submitStep2);
-  } else {
-    if (password.className.includes('is-invalid')) password.classList.remove('is-invalid');
-    passwordOrigin = e.target.value;
-    flag.password = true;
-    activateElement(submitStep2, flag);
-  }
-});
-
-confirm.addEventListener('input', function(e) {
-  if (e.target.value === passwordOrigin) {
-    if (confirm.className.includes('is-invalid')) confirm.classList.remove('is-invalid');
-    flag.confirm = true;
-    info.password = passwordOrigin;
-    activateElement(submitStep2, flag);
-  } else {
-    if (!confirm.className.includes('is-invalid')) confirm.classList.add('is-invalid');
-    errMsgList[2].textContent = 'Password incorrect.';
-    flag.confirm = false;
-    deactivateElement(submitStep2);
-  }
-});
-
-
+confirm.addEventListener('input', getInputValidateEventHandler('confirm', submitStep2, function(value) {
+  return value === info.password;
+}));
 
 submitStep2.addEventListener('click', function(e) {
   e.preventDefault();
+  // 넘어가기 전에도 validation 필요. 이벤트 발생하지 않을때가 있음. 인풋이벤트 말고 pubsub 같은 패턴으로 구현하는게 나은듯..?
   displayStepN(3);
 });
+
+// step3
 
 let name = step3.querySelector('#name');
 let phone = step3.querySelector('#phone');
 let address = step3.querySelector('#address');
-let hompage = step3.querySelector('#homepage');
+let homepage = step3.querySelector('#homepage');
 let submitStep3 = step3.querySelector('.btn-primary');
 let flagStep3 = {};
-let phoneNumberPattern = /[0-9]{3}-[0-9]{3,4}-[0-9]{4}/;
-let homepageUrlPattern = /https*:\/\/.*/;
 
-name.addEventListener('input', function(e) {
-  if (e.target.value === '') {
-    flagStep3.fullname = false;
-    deactivateElement(submitStep3);
-    if (!e.target.className.includes('is-invalid')) e.target.classList.add('is-invalid');
-    e.target.nextElementSibling.textContent = 'Please enter your name.';
-  } else {
-    flagStep3.fullname = true;
-    info.fullname = e.target.value;
-    if (e.target.className.includes('is-invalid')) e.target.classList.remove('is-invalid');
-    activateElement(submitStep3, flagStep3);
-  }
-});
+name.addEventListener('input', getInputValidateEventHandler('full name', submitStep3));
 
-phone.addEventListener('input', function(e) {
-  if (e.target.value === '') {
-    flagStep3.phone = false;
-    deactivateElement(submitStep3);
-    if (!e.target.className.includes('is-invalid')) e.target.classList.add('is-invalid');
-    e.target.nextElementSibling.textContent = 'Please enter your phone number.';
-  } else if (phoneNumberPattern.test(e.target.value)) {
-    flagStep3.phone = true;
-    info.phone = e.target.value;
-    if (e.target.className.includes('is-invalid')) e.target.classList.remove('is-invalid');
-    activateElement(submitStep3, flagStep3);
-  } else {
-    flagStep3.phone = false;
-    deactivateElement(submitStep3);
-    if (!e.target.className.includes('is-invalid')) e.target.classList.add('is-invalid');
-    e.target.nextElementSibling.textContent = 'Please enter a valid phone number.';
-  }
-});
+phone.addEventListener('input', getInputValidateEventHandler('phone number', submitStep3, function(value) {
+  let phoneNumberPattern = /[0-9]{3}-[0-9]{3,4}-[0-9]{4}/;
+  return phoneNumberPattern.test(value);
+}));
 
-address.addEventListener('input', function(e) {
-  if (e.target.value === '') {
-    flagStep3.address = false;
-    deactivateElement(submitStep3);
-    if (!e.target.className.includes('is-invalid')) e.target.classList.add('is-invalid');
-    e.target.nextElementSibling.textContent = 'Please enter your address.';
-  } else {
-    flagStep3.address = true;
-    info.address = e.target.value;
-    if (e.target.className.includes('is-invalid')) e.target.classList.remove('is-invalid');
-    activateElement(submitStep3, flagStep3);
-  }
-});
+address.addEventListener('input', getInputValidateEventHandler('address', submitStep3));
 
-hompage.addEventListener('input', function(e) {
-  if (e.target.value === '') {
-    flagStep3.homepage = false;
-    deactivateElement(submitStep3);
-    if (!e.target.className.includes('is-invalid')) e.target.classList.add('is-invalid');
-    e.target.nextElementSibling.textContent = 'Please enter your homepage url.';
-  } else if (homepageUrlPattern.test(e.target.value)) {
-    flagStep3.homepage = true;
-    info.homepage = e.target.value;
-    if (e.target.className.includes('is-invalid')) e.target.classList.remove('is-invalid');
-    activateElement(submitStep3, flagStep3);
-  } else {
-    flagStep3.homepage = false;
-    deactivateElement(submitStep3);
-    if (!e.target.className.includes('is-invalid')) e.target.classList.add('is-invalid');
-    e.target.nextElementSibling.textContent = 'Please enter a valid homepage url.';
-  }
-});
+homepage.addEventListener('input', getInputValidateEventHandler('homepage url', submitStep3, function(value) {
+  let homepageUrlPattern = /https*:\/\/.*/;
+  return homepageUrlPattern.test(value);
+}));
 
 submitStep3.addEventListener('click', function(e) {
   e.preventDefault();
-  debugger;
-  // var t = _.template(step4.innerHTML);
-  var t = _.template(step4Template);
-  var j = domify(t(info));
-  step4.replaceChild(j, step4.children[0]);
-  console.log(info);
+  step4.replaceChild(domify(_.template(step4Template)(info)), step4.children[0]);
   displayStepN(4);
 });
 
+function switchClassInvalidOrNot (el, isValid=false) {
+  let classList = Array.from(el.classList);
 
+  if (!isValid && !classList.includes('is-invalid')) {
+    el.classList.add('is-invalid');
+  } else if (isValid && classList.includes('is-invalid')) {
+    el.classList.remove('is-invalid');
+  }
+}
 
-function activateElement (el, flag) {
+function activateButton (el, flag) {
+  let classList = Array.from(el.classList);
+
   if (flag) {
-    if (!Object.values(flag).includes(false) && el.className.includes('disabled')) {
+    if (!Object.values(flag).includes(false) && classList.includes('disabled')) {
       el.classList.remove('disabled');
       el.classList.add('active');
     }
-    // console.log(flag)
   } else {
-    if (el.className.includes('disabled')) {
+    if (classList.includes('disabled')) {
       el.classList.remove('disabled');
       el.classList.add('active');
     }
   }
 }
 
-function deactivateElement (el) {
-  if (!el.className.includes('disabled')) {
+function deactivateButton (el) {
+  let classList = Array.from(el.classList);
+  if (!classList.includes('disabled')) {
     el.classList.add('disabled');
     el.classList.remove('active');
   }
+}
+
+function getInputValidateEventHandler (key, button, validator) {
+  function validate(value, validator) {
+    return validator(value);
+  }
+  key = key.replace(/(\s)(\w)/, function(match, p1, p2){
+    return p2.toUpperCase();
+  });
+  return function(e) {
+    let testResult = validator ? validate(e.target.value, validator) : true;
+
+    if (e.target.value === '') {
+      switchClassInvalidOrNot(e.target);
+      e.target.nextElementSibling.textContent = `please enter ${ key }`;
+      flag[key] = false;
+      deactivateButton(button);
+    } else if (testResult) {
+      switchClassInvalidOrNot(e.target, true);
+      flag[key] = true;
+      info[key] = e.target.value;
+      console.log(info)
+      activateButton(button, flag);
+    } else {
+      switchClassInvalidOrNot(e.target);
+      e.target.nextElementSibling.textContent = `invalid ${ key }`;
+      flag[key] = false;
+      deactivateButton(button);
+    }
+  };
 }
 
 
