@@ -206,6 +206,12 @@ function activateButton (el, flag) {
 }
 
 function deactivateButton (el) {
+  let index = currentPage + 1;
+  while (paginationNavigator.querySelector(`.page-item:nth-child(${ index })`)) {
+    paginationNavigator.querySelector(`.page-item:nth-child(${ index })`).classList.add('disabled');
+    paginationNavigator.querySelector(`.page-item:nth-child(${ index })`).classList.remove('passed');
+    index++;
+  }
   let classList = Array.from(el.classList);
   if (!classList.includes('disabled')) {
     el.classList.add('disabled');
